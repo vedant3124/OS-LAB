@@ -1,0 +1,44 @@
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/wait.h>
+
+int main() {
+    pid_t pid1, pid2, pid3;
+
+    printf("Parent Process Started\n");
+    printf("Parent PID: %d\n\n", getpid());
+
+    pid1 = fork();
+
+    if (pid1 == 0) {
+        // Child 1
+        printf("Child 1 PID: %d, Parent PID: %d\n", getpid(), getppid());
+        execl("/bin/ls", "ls", "-1", NULL);
+    }
+
+    pid2 = fork();
+
+    if (pid2 == 0) {
+        // Child 2
+        printf("Child 2 PID: %d, Parent PID: %d\n", getpid(), getppid());
+        execl("/bin/ls", "ls", "-1", NULL);
+    }
+
+    pid3 = fork();
+
+    if (pid3 == 0) {
+        // Child 3
+        printf("Child 3 PID: %d, Parent PID: %d\n", getpid(), getppid());
+        execl("/bin/ls", "ls", "-1", NULL);
+    }
+
+    // Parent waits for all children
+    wait(NULL);
+    wait(NULL);
+    wait(NULL);
+
+    printf("\nAll child processes completed\n");
+    printf("Parent process exiting\n");
+
+    return 0;
+}
